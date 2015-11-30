@@ -25,7 +25,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreeCellRenderer;
 
-import unixv7.V7Driver;
 import vfs.tree.VNode;
 
 public class TreeView extends JPanel implements TreeWillExpandListener, TreeSelectionListener {
@@ -34,9 +33,15 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 	
 	private final MainView mainView;
 
-	public TreeView(VNode rootNode, MainView mainView) {
+	public TreeView(MainView mainView) {
 		super(new BorderLayout());
-		this.mainView = mainView;
+		this.mainView = mainView;		
+		add(new JScrollPane());
+		setPreferredSize(new Dimension(300, 400));	
+	}
+	
+	public void load(VNode rootNode) {
+		
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode();
 		DefaultTreeModel treeModel = new DefaultTreeModel(root);
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(rootNode);
@@ -51,15 +56,17 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 		tree.setRootVisible(false);
 		
 		// add listener
-		tree.addTreeSelectionListener(this);;
+		tree.addTreeSelectionListener(this);
 		tree.addTreeWillExpandListener(this);
 		tree.setCellRenderer(new CellRenderer(tree.getCellRenderer()));
 		
 		
 		tree.expandRow(0);
-		setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		
+		//setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		add(new JScrollPane(tree));
 		setPreferredSize(new Dimension(300, 400));		
+		
 	}
 	
 	@Override
@@ -84,7 +91,6 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 		final JTree tree = (JTree) event.getSource();		
 		final DefaultMutableTreeNode node = (DefaultMutableTreeNode)event.getPath().getLastPathComponent();
 		final DefaultTreeModel model = (DefaultTreeModel) tree.getModel();
-		final VNode parent = (VNode)node.getUserObject();
 		for (int i = 0; i < node.getChildCount(); ++i) {
 			final DefaultMutableTreeNode newnode = (DefaultMutableTreeNode)node.getChildAt(i);
 			final VNode vnode = (VNode) newnode.getUserObject();
@@ -92,14 +98,12 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 			if (newnode.getChildCount() > 0)
 				continue;
 			
-			SwingWorker<String, VNode> worker = new SwingWorker<String, VNode>() {
-				
+			SwingWorker<String, VNode> worker = new SwingWorker<String, VNode>() {				
 				@Override
 				public String doInBackground() {
 					Collection<VNode> children = vnode.getChildren();
 					for (VNode child : children) {
 						if (child.isDirectory()) {
-							System.out.println("publish");
 							publish(child);
 						}
 					}					
@@ -118,21 +122,10 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 		}
 	}
 	
-	
-	
 	@Override
 	public void treeWillCollapse(TreeExpansionEvent event)
 			throws ExpandVetoException {
-		System.out.println("collapse");
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	private class CellRenderer extends DefaultTreeCellRenderer {
 		private final TreeCellRenderer renderer;
@@ -164,9 +157,7 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 	            }
 	        }
 	        return c;		
-		}
-		
-		
+		}		
 	}
 }
 
