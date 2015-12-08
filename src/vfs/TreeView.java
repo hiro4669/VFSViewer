@@ -80,7 +80,7 @@ public class TreeView extends JPanel implements TreeWillExpandListener, TreeSele
 	    for (VNode child : vnode.getChildren()) {
 	    	list.add(child);	    	 
 	    }
-	    mainView.updateTable(list);	     
+	    mainView.updateTable(list);
 	}
 	
 	

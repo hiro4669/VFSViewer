@@ -1,7 +1,9 @@
 package vfs;
 
 import java.awt.BorderLayout;
+import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -18,11 +20,17 @@ public class MainView {
 	private VNode rootNode;
 	private TreeView treeView;
 	private TableView tableView;
-	private DetailView detailView;
+	//private DetailView detailView;
+	private DetailSplitView detailView;
 	private FileChooseView fileView;
 	
 	private V7Driver driver;
 	private String diskPath;
+	
+	private byte[] currentData;
+	private String currentPath;
+	
+	private String baseDir = "output";
 	
 	public static void main(String ...args) {
 		MainView main = null;
@@ -54,7 +62,8 @@ public class MainView {
 		tableView = new TableView(this);
 	}
 	private void initDetailView() {
-		detailView = new DetailView(this);
+		//detailView = new DetailView(this);
+		detailView = new DetailSplitView(this);
 	}
 	
 	private void initDriver() {
@@ -100,6 +109,7 @@ public class MainView {
 	
 	public void updateTable(List<VNode> newnodes) {
 		tableView.updateModel(newnodes, driver);
+		setCurrent(null, null);
 	}
 	
 	public void updateDetail(VNode tnode) {
@@ -108,6 +118,33 @@ public class MainView {
 		//String inodeInfo = driver.getInodeInfo(tnode.getAbsolutePath());
 		//System.out.println(inodeInfo);
 	}
+		
+	public void setCurrent(byte[] data, String path) {
+		this.currentData = data;
+		this.currentPath = path;
+	}
 	
+	public void serialize() {
+		if ((currentData != null) && (currentPath != null)) {
+			System.out.println(currentPath);
+			int pos = currentPath.substring(1,  currentPath.length()).lastIndexOf("/");
+			if (pos != -1) {
+				String dirName = baseDir + currentPath.substring(0, pos+1);
+				File dir = new File(dirName);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+			}
+			
+			try {
+				FileOutputStream fout = new FileOutputStream(baseDir + currentPath);
+				fout.write(currentData, 0, currentData.length);
+				fout.flush();
+				fout.close();				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}									
+		}
+	}
 
 }
