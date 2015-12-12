@@ -24,7 +24,7 @@ public class DetailSplitView extends JSplitPane {
 		inodeArea = new JTextArea("inode information is shown here...");
 		inodeArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		inodeArea.setEditable(false);
-		inodeArea.setPreferredSize(new Dimension(500, 1200));
+		inodeArea.setPreferredSize(new Dimension(500, 10000));
 		JScrollPane iscroll = new JScrollPane(inodeArea);
 		iscroll.setPreferredSize(new Dimension(500, 800));
 		upperPanel.add(iscroll);
@@ -35,7 +35,7 @@ public class DetailSplitView extends JSplitPane {
 		dataArea = new JTextArea("data is shown here as text...");
 		dataArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 		dataArea.setEditable(false);
-		dataArea.setPreferredSize(new Dimension(500, 1200));
+		dataArea.setPreferredSize(new Dimension(500, 10000));
 		JScrollPane dscroll = new JScrollPane(dataArea);
 		dscroll.setPreferredSize(new Dimension(500, 800));
 		belowPanel.add(dscroll);
@@ -52,7 +52,8 @@ public class DetailSplitView extends JSplitPane {
 	public void inodeChanged(VNode target, V7Driver driver) {
 		if (driver != null) {
 			String inodeInfo = driver.getInodeInfo(target.getAbsolutePath());
-			inodeArea.setText(inodeInfo);
+			//inodeArea.setText(inodeInfo);
+			updateInode(inodeInfo);
 			//setDividerSize(5);
 			//setResizeWeight(0.5);
 		}		
@@ -68,6 +69,10 @@ public class DetailSplitView extends JSplitPane {
 		} else {
 			mainView.setCurrent(null, null);
 		}
+	}
+	
+	public void updateInode(String text) {
+		inodeArea.setText(text);
 	}
 
 }

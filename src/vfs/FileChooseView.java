@@ -25,6 +25,12 @@ public class FileChooseView extends JPanel implements ActionListener {
 			mainView.serialize();
 		});
 		add(extButton);
+		
+		JButton disasButton = new JButton("Disasm");
+		disasButton.addActionListener((ActionEvent e) -> {
+			mainView.disassm();
+		});
+		add(disasButton);
 	}	
 	public void actionPerformed(ActionEvent event) {
 		

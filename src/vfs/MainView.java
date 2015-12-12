@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import unixv7.V7Driver;
+import ve3.disassm.V32Disassm;
 import vfs.tree.VNode;
 import vfs.tree.VNodeCreator;
 
@@ -144,6 +145,18 @@ public class MainView {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}									
+		}
+	}
+	
+	public void disassm() {
+		if ((currentData != null) && (currentPath != null)) {
+			System.out.println("disassm");
+			V32Disassm disassm = new V32Disassm(currentData);
+			String log = disassm.disassm();
+			if (log != null) {
+				detailView.updateInode(log);
+			}
+			
 		}
 	}
 

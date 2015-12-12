@@ -35,8 +35,13 @@ public class DetailView extends JPanel {
 	public void inodeChanged(VNode target, V7Driver driver) {
 		if (driver != null) {
 			String inodeInfo = driver.getInodeInfo(target.getAbsolutePath());
-			inodeArea.setText(inodeInfo);
+			//inodeArea.setText(inodeInfo);
+			updateInode(inodeInfo);
 		}		
+	}
+	
+	public void updateInode(String text) {
+		inodeArea.setText(text);
 	}
 	
 	public void dataChanged(VNode target, V7Driver driver) {
